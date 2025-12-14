@@ -1,26 +1,72 @@
 # bot
-import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
+from telegram import Update, ReplyKeyboardMarkup
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    MessageHandler,
+    ContextTypes,
+    filters
+)
 
 TOKEN = "8581170892:AAF5bk5WrpTozwgHyuHSidyXv1aE6KGZB4s"
 
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        ["(мем)  Кіт"],
+        ["(мем)  Антон чігур нікого не вбивав"],
+        ["(мем)  Вчимо німецьку мову"],
+        ["(фільм) Початок"],
+        ["(фільм) TENET"],
+        ["(фільм) Interstelar"],
+        ["(стікер) Баскетбол"],
+        ["/start"]
+    ]
 
-async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f'Hello {update.effective_user.first_name}')
+    reply_keyboard = ReplyKeyboardMarkup(
+        keyboard,
+        resize_keyboard=True,
+        one_time_keyboard=False
+    )
+
+    await update.message.reply_text(
+        "Обери відео 👇 для оновлення натисни /start",
+        reply_markup=reply_keyboard
+    )
+
+async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message.text == "(мем)  Кіт":
+        await update.message.reply_text("https://www.youtube.com/watch?v=k-oMyXtrgME")
+
+    elif update.message.text == "(мем)  Антон чігур нікого не вбивав":
+        await update.message.reply_text("https://www.youtube.com/watch?v=VY--3seIhtA")
+
+    elif update.message.text == "(мем)  Вчимо німецьку мову":
+        await update.message.reply_text("https://www.youtube.com/watch?v=g6RFx7LlmHM&list=RDg6RFx7LlmHM&start_radio=1")
+
+    elif update.message.text == "(фільм) Початок":
+        await update.message.reply_text("https://uakino.best/filmy/genre-action/2-pochatok/download.html")
+
+    elif update.message.text == "(фільм) TENET":
+        await update.message.reply_text("https://uaserials.com/1634-tenet-2020.html")
+
+    elif update.message.text == "(фільм) Interstelar":
+        await update.message.reply_text("https://uaserials.my/2038-interstellar-2014.html")
+
+    elif update.message.text == "(стікер) Баскетбол":
+        await update.message.reply_text("🏀")
 
 
-async def text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    text = update.message.text
-    await update.message.reply_text(f'Hello {update.effective_user.first_name}! You said: "{text}"')
+if __name__ == "__main__":
+    app = ApplicationBuilder().token(TOKEN).build()
+
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
+
+    print("Бот запущено")
+    app.run_polling()
 
 
-app = ApplicationBuilder().token(TOKEN).build()
-
-app.add_handler(CommandHandler("hello", hello))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text))
-app.run_polling()
-
-
+    
 #weather bot
 
 import logging
